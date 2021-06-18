@@ -1,9 +1,12 @@
 package com.thoughtworks.refactor;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 public class Poker {
     public String compareResult(String blackHands, String whiteHands) {
         String winResult = "";
@@ -146,13 +149,11 @@ public class Poker {
         }
         return winResult;
     }
-
     private int[] getNoRepeatNumbers(int[] handsNumbers) {
         return IntStream.of(handsNumbers)
                 .filter(number -> Collections.frequency(Arrays.stream(handsNumbers).boxed().collect(Collectors.toList()), number) == 1)
                 .toArray();
     }
-
     private int[] getRepeatNumbers(int[] handsNumbers) {
         return IntStream.of(handsNumbers)
                 .filter(number -> Collections.frequency(Arrays.stream(handsNumbers)
@@ -161,12 +162,10 @@ public class Poker {
                 .distinct()
                 .toArray();
     }
-
     private String showCard(int cardNumber) {
         String[] cardViews = {"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"};
         return cardViews[cardNumber - 2];
     }
-
     private int[] descendingSort(int[] handsNumbers) {
         return IntStream.of(handsNumbers)
                 .boxed()
@@ -174,7 +173,6 @@ public class Poker {
                 .mapToInt(i -> i)
                 .toArray();
     }
-
     private int getHandsCategoryIndex(String handsCategory) {
         int index = -1;
         String[] handsCategories = {"StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "ThreeOfAKind", "TwoPair", "OnePair", "HighCard"};
@@ -185,51 +183,74 @@ public class Poker {
         }
         return index;
     }
-
     //判断是什么牌
     private String getHandsCategory(String hands) {
         String handsCategory = "";
-        String[] strArray = hands.split("");
         int[] number = getHandsNumbers(hands);
-        String[] suit = getSuits(strArray);
-        HashSet<Integer> hashSetNumber = getDistinctNumber(number);
-        HashSet<String> suits = getDistinctNumSet(suit);
-        if ((number[0] - number[4] == 4) && (suits.size() == 1) && (getDistinctNumber(hashSetNumber) == 5)) { //五个相邻的数字且花色一样——同花顺
+        String[] suit = getSuit(hands);
+        if (isStraightFlush(number, suit)) { //五个相邻的数字且花色一样——同花顺
             handsCategory = "StraightFlush";
-        } else if (number[0] - number[4] == 4 && (getDistinctNumber(hashSetNumber) == 5)) { //五个相邻数字——顺子
+        } else if (isStraight(number)) { //五个相邻数字——顺子
             handsCategory = "Straight";
-        } else if (suits.size() == 1 && getDistinctNumber(hashSetNumber) == 5) { //同一花色——同花
+        } else if (isFlush(number, suit)) { //同一花色——同花
             handsCategory = "Flush";
-        } else if (getDistinctNumber(hashSetNumber) == 5) { //五个不相邻的数字——散牌
+        } else if (isHighCard(number)) { //五个不相邻的数字——散牌
             handsCategory = "HighCard";
-        } else if (getDistinctNumber(hashSetNumber) == 4) { //一对相同，其余三个数字不同——对子
-        handsCategory = "OnePair";
-        } else if(((number[0] == number[1] && number[2] == number[3]) || (number[1] == number[2] && number[3] == number[4]) || (number[0] == number[1] && number[3] == number[4])) && getDistinctNumber(hashSetNumber) == 3) { //两对
+        } else if (isOnePair(number)) { //一对相同，其余三个数字不同——对子
+            handsCategory = "OnePair";
+        } else if (isTwoPair(number)) { //两对
             handsCategory = "TwoPair";
-        } else if(getDistinctNumber(hashSetNumber) == 3) { //三个数字相同，另外两个数字不同——三条
+        } else if (isThreeOfAKind(number)) { //三个数字相同，另外两个数字不同——三条
             handsCategory = "ThreeOfAKind";
-        } else if (number[0] != number[1] || number[3] != number[4]) { //三个数字相同，另外两个数字相同——葫芦
+        } else if (isFourOfAKind(number)) { //三个数字相同，另外两个数字相同——葫芦
             handsCategory = "FourOfAKind";
         } else { //四个数字相同——铁支
             handsCategory = "FullHouse";
         }
         return handsCategory;
     }
-
-    private int getDistinctNumber(HashSet<Integer> hashSetNumber) {
-        return hashSetNumber.size();
+    private boolean isFourOfAKind(int[] number) {
+        return number[0] != number[1] || number[3] != number[4];
     }
-
-    private HashSet<String> getDistinctNumSet(String[] suit) {
+    private boolean isThreeOfAKind(int[] number) {
+        return getDistinctNumbersCount(number) == 3;
+    }
+    private boolean isTwoPair(int[] number) {
+        return isThreeOfAKind(number) && ((number[0] == number[1] && number[2] == number[3]) || (number[1] == number[2] && number[3] == number[4]) || (number[0] == number[1]
+                && number[3] == number[4]));
+    }
+    private boolean isOnePair(int[] number) {
+        return getDistinctNumbersCount(number) == 4;
+    }
+    private boolean isHighCard(int[] number) {
+        return getDistinctNumbersCount(number) == 5;
+    }
+    private boolean isFlush(int[] number, String[] suit) {
+        return isHighCard(number) && getDistinctSuitsCount(suit) == 1;
+    }
+    private boolean isStraight(int[] number) {
+        return number[0] - number[4] == 4 && (isHighCard(number));
+    }
+    private boolean isStraightFlush(int[] number, String[] suit) {
+        return (number[0] - number[4] == 4) && (getDistinctSuitsCount(suit) == 1) && (isHighCard(number));
+    }
+    private int getDistinctSuitsCount(String[] suit) {
+        return getDistinctSuits(suit).size();
+    }
+    private int getDistinctNumbersCount(int[] number) {
+        return getDistinctNumbers(number).size();
+    }
+    private String[] getSuit(String hands) {
+        String[] strArray = hands.split("");
         int i;
-        HashSet<String> suits = new HashSet<String>();
+        String[] suit1 = new String[5];
         for (i = 0; i < 5; i++) {
-            suits.add(suit[i]);
+            suit1[i] = strArray[i * 3 + 1];
         }
-        return suits;
+        String[] suit = suit1;
+        return suit;
     }
-
-    private HashSet<Integer> getDistinctNumber(int[] number) {
+    private HashSet<Integer> getDistinctNumbers(int[] number) {
         int i;
         HashSet<Integer> hashSetNumber = new HashSet<Integer>();
         for (i = 0; i < 5; i++) {
@@ -237,28 +258,24 @@ public class Poker {
         }
         return hashSetNumber;
     }
-
-    private String[] getSuits(String[] strArray) {
+    private HashSet<String> getDistinctSuits(String[] suit) {
         int i;
-        String[] suit = new String[5];
+        HashSet<String> suits = new HashSet<String>();
         for (i = 0; i < 5; i++) {
-            suit[i] = strArray[i * 3 + 1];
+            suits.add(suit[i]);
         }
-        return suit;
+        return suits;
     }
-
     //数字转化并将其从大到小排序
     private int[] getHandsNumbers(String hands) {
         int[] cardNumbers = getCardNumbers(hands);
         return descendingSort(cardNumbers);
     }
-
     private int[] getCardNumbers(String hands) {
         return getCardNumberViews(hands).stream()
                 .mapToInt(cardNumberView -> getCardNumber(cardNumberView))
                 .toArray();
     }
-
     private List<String> getCardNumberViews(String hands) {
         List<String> cardNumberViews = new ArrayList<>();
         String[] strArray = hands.split("");
@@ -268,7 +285,6 @@ public class Poker {
         }
         return cardNumberViews;
     }
-
     private int getCardNumber(String cardNumberView) {
         int cardNumber;
         switch (cardNumberView) {
