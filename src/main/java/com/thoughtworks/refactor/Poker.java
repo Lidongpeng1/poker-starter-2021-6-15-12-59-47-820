@@ -194,18 +194,16 @@ public class Poker {
         String[] suit = getSuits(strArray);
         HashSet<Integer> hashSetNumber = getDistinctNumber(number);
         HashSet<String> suits = getDistinctNumSet(suit);
-        if (getDistinctNumber(hashSetNumber) == 5) {
-            if ((number[0] - number[4] == 4) && (suits.size() == 1) && (getDistinctNumber(hashSetNumber) == 5)) { //五个相邻的数字且花色一样——同花顺
-                handsCategory = "StraightFlush";
-            } else if (number[0] - number[4] == 4 && (getDistinctNumber(hashSetNumber) == 5)) { //五个相邻数字——顺子
-                handsCategory = "Straight";
-            } else if (suits.size() == 1) { //同一花色——同花
-                handsCategory = "Flush";
-            } else { //五个不相邻的数字——散牌
-                handsCategory = "HighCard";
-            }
+        if ((number[0] - number[4] == 4) && (suits.size() == 1) && (getDistinctNumber(hashSetNumber) == 5)) { //五个相邻的数字且花色一样——同花顺
+            handsCategory = "StraightFlush";
+        } else if (number[0] - number[4] == 4 && (getDistinctNumber(hashSetNumber) == 5)) { //五个相邻数字——顺子
+            handsCategory = "Straight";
+        } else if (suits.size() == 1 && getDistinctNumber(hashSetNumber) == 5) { //同一花色——同花
+            handsCategory = "Flush";
+        } else if (getDistinctNumber(hashSetNumber) == 5) { //五个不相邻的数字——散牌
+            handsCategory = "HighCard";
         } else if (getDistinctNumber(hashSetNumber) == 4) { //一对相同，其余三个数字不同——对子
-            handsCategory = "OnePair";
+        handsCategory = "OnePair";
         } else if (getDistinctNumber(hashSetNumber) == 3) {
             if ((number[0] == number[1] && number[2] == number[3]) || (number[1] == number[2] && number[3] == number[4]) || (number[0] == number[1] && number[3] == number[4])) { //两对
                 handsCategory = "TwoPair";
