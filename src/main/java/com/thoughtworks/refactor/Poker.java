@@ -3,13 +3,13 @@ package com.thoughtworks.refactor;
 import java.util.*;
 
 public class Poker {
-    public String compareResult(String black, String white) {
+    public String compareResult(String blackPlayerCards, String whitePlayerCards) {
         String winResult = "";
-        String blackType = judgeType(black);
-        String whiteType = judgeType(white);
+        String blackType = judgeType(blackPlayerCards);
+        String whiteType = judgeType(whitePlayerCards);
         String[] type = {"StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "ThreeOfAKind", "TwoPair", "OnePair", "HighCard"};
-        int[] blackNumber = covertPokerStringToSortedNumbers(black);
-        int[] whiteNumber = covertPokerStringToSortedNumbers(white);
+        int[] blackNumber = covertPokerStringToSortedNumbers(blackPlayerCards);
+        int[] whiteNumber = covertPokerStringToSortedNumbers(whitePlayerCards);
         int blackIndex = judgeIndex(blackType);
         int whiteIndex = judgeIndex(whiteType);
         int[] blackArraySort = arraySort(blackNumber);
@@ -293,9 +293,9 @@ public class Poker {
     }
 
     //数字转化并将其从大到小排序
-    private int[] covertPokerStringToSortedNumbers(String pokers) {
+    private int[] covertPokerStringToSortedNumbers(String str) {
         int[] number = new int[5];
-        String[] strArray = pokers.split("");
+        String[] strArray = str.split("");
         int i;
         for (i = 0; i < 5; i++) {
             String c = strArray[i * 3];
