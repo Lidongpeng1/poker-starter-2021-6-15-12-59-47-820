@@ -204,18 +204,14 @@ public class Poker {
             handsCategory = "HighCard";
         } else if (getDistinctNumber(hashSetNumber) == 4) { //一对相同，其余三个数字不同——对子
         handsCategory = "OnePair";
-        } else if (getDistinctNumber(hashSetNumber) == 3) {
-            if ((number[0] == number[1] && number[2] == number[3]) || (number[1] == number[2] && number[3] == number[4]) || (number[0] == number[1] && number[3] == number[4])) { //两对
-                handsCategory = "TwoPair";
-            } else { //三个数字相同，另外两个数字不同——三条
-                handsCategory = "ThreeOfAKind";
-            }
-        } else {
-            if (number[0] != number[1] || number[3] != number[4]) { //三个数字相同，另外两个数字相同——葫芦
-                handsCategory = "FourOfAKind";
-            } else { //四个数字相同——铁支
-                handsCategory = "FullHouse";
-            }
+        } else if(((number[0] == number[1] && number[2] == number[3]) || (number[1] == number[2] && number[3] == number[4]) || (number[0] == number[1] && number[3] == number[4])) && getDistinctNumber(hashSetNumber) == 3) { //两对
+            handsCategory = "TwoPair";
+        } else if(getDistinctNumber(hashSetNumber) == 3) { //三个数字相同，另外两个数字不同——三条
+            handsCategory = "ThreeOfAKind";
+        } else if (number[0] != number[1] || number[3] != number[4]) { //三个数字相同，另外两个数字相同——葫芦
+            handsCategory = "FourOfAKind";
+        } else { //四个数字相同——铁支
+            handsCategory = "FullHouse";
         }
         return handsCategory;
     }
