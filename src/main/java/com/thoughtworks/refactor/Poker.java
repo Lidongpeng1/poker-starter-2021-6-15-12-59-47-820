@@ -5,8 +5,8 @@ import java.util.*;
 public class Poker {
     public String compareResult(String blackPlayerCards, String whitePlayerCards) {
         String winResult = "";
-        String blackPlayerCardsType = judgeType(blackPlayerCards);
-        String whitePlayerCardsType = judgeType(whitePlayerCards);
+        String blackPlayerCardsType = getPlayerCardsType(blackPlayerCards);
+        String whitePlayerCardsType = getPlayerCardsType(whitePlayerCards);
         String[] cardTypeArray = {"StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "ThreeOfAKind", "TwoPair", "OnePair", "HighCard"};
         int[] blackCardsNum = covertPokerStringToSortedNumbers(blackPlayerCards);
         int[] whiteCardsNum = covertPokerStringToSortedNumbers(whitePlayerCards);
@@ -247,7 +247,7 @@ public class Poker {
     }
 
     //判断是什么牌
-    private String judgeType(String str) {
+    private String getPlayerCardsType(String str) {
         String type = "";
         String[] strArray = str.split("");
         int[] number = covertPokerStringToSortedNumbers(str);
