@@ -24,3 +24,7 @@ test {
 }
 
 apply from: 'checkstyle.gradle'
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
