@@ -7,7 +7,7 @@ public class Poker {
         String winResult = "";
         String blackType = judgeType(blackPlayerCards);
         String whiteType = judgeType(whitePlayerCards);
-        String[] type = {"StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "ThreeOfAKind", "TwoPair", "OnePair", "HighCard"};
+        String[] cardTypeArray = {"StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "ThreeOfAKind", "TwoPair", "OnePair", "HighCard"};
         int[] blackNumber = covertPokerStringToSortedNumbers(blackPlayerCards);
         int[] whiteNumber = covertPokerStringToSortedNumbers(whitePlayerCards);
         int blackIndex = judgeIndex(blackType);
@@ -19,9 +19,9 @@ public class Poker {
         int[] blackNoRepeat = noOrRepeatNumber(blackNumber, 1);
         int[] whiteNoRepeat = noOrRepeatNumber(whiteNumber, 1);
         if (blackIndex < whiteIndex) {
-            winResult = "black wins - " + type[blackIndex];
+            winResult = "black wins - " + cardTypeArray[blackIndex];
         } else if (blackIndex > whiteIndex) {
-            winResult = "white wins - " + type[whiteIndex];
+            winResult = "white wins - " + cardTypeArray[whiteIndex];
         } else {
             if (blackIndex == 0) { //同花顺
                 if (blackNumber[0] < whiteNumber[0]) {
