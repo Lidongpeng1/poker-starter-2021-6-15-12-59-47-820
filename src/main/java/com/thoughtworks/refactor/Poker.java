@@ -1,6 +1,7 @@
 package com.thoughtworks.refactor;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Poker {
     public String compareResult(String blackHands, String whiteHands) {
@@ -160,6 +161,7 @@ public class Poker {
 
     private int[] descendingSort(int[] handsNumbers) {
         Map<Integer, Integer> map = getDistinctNumbersAndCount(handsNumbers);
+
         List<Map.Entry<Integer, Integer>> list = new ArrayList<>();
         list.addAll(map.entrySet());
         Collections.sort(list, new Comparator<>() {
@@ -186,6 +188,14 @@ public class Poker {
             }
         }
         return map;
+    }
+
+
+    private Map<Integer, Integer> getDistinctNumbersAndCount2(int[] handsNumbers) {
+        Map<Integer, Integer> distinctNumbersAndCount = Arrays.stream(handsNumbers)
+                .boxed() //封装
+                .collect(Collectors.groupingBy(number -> number, Collectors.reducing(0,number -> 1, Integer::sum)));
+        return distinctNumbersAndCount;
     }
 
     //先获得数组中每个元素出现的次数，然后再进行计算出现次数大于1的和出现次数等于1的
