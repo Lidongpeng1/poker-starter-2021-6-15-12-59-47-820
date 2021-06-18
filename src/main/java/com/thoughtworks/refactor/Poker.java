@@ -10,20 +10,20 @@ public class Poker {
         String[] cardTypeArray = {"StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "ThreeOfAKind", "TwoPair", "OnePair", "HighCard"};
         int[] blackCardsNum = covertPokerStringToSortedNumbers(blackPlayerCards);
         int[] whiteCardsNum = covertPokerStringToSortedNumbers(whitePlayerCards);
-        int blackIndex = judgeIndex(blackPlayerCardsType);
-        int whiteIndex = judgeIndex(whitePlayerCardsType);
+        int blackPlayerCardsTypeIndex = getPlayerCardsTypeIndex(blackPlayerCardsType);
+        int whitePlayerCardsTypeIndex = getPlayerCardsTypeIndex(whitePlayerCardsType);
         int[] blackArraySort = arraySort(blackCardsNum);
         int[] whiteArraySort = arraySort(whiteCardsNum);
         int[] blackRepeat = noOrRepeatNumber(blackCardsNum, 0);
         int[] whiteRepeat = noOrRepeatNumber(whiteCardsNum, 0);
         int[] blackNoRepeat = noOrRepeatNumber(blackCardsNum, 1);
         int[] whiteNoRepeat = noOrRepeatNumber(whiteCardsNum, 1);
-        if (blackIndex < whiteIndex) {
-            winResult = "black wins - " + cardTypeArray[blackIndex];
-        } else if (blackIndex > whiteIndex) {
-            winResult = "white wins - " + cardTypeArray[whiteIndex];
+        if (blackPlayerCardsTypeIndex < whitePlayerCardsTypeIndex) {
+            winResult = "black wins - " + cardTypeArray[blackPlayerCardsTypeIndex];
+        } else if (blackPlayerCardsTypeIndex > whitePlayerCardsTypeIndex) {
+            winResult = "white wins - " + cardTypeArray[whitePlayerCardsTypeIndex];
         } else {
-            if (blackIndex == 0) { //同花顺
+            if (blackPlayerCardsTypeIndex == 0) { //同花顺
                 if (blackCardsNum[0] < whiteCardsNum[0]) {
                     String sig = intNumber(whiteCardsNum[0]);
                     winResult = "white wins - high card:" + sig;
@@ -33,7 +33,7 @@ public class Poker {
                 } else {
                     winResult = "tie";
                 }
-            } else if (blackIndex == 1) { //铁支
+            } else if (blackPlayerCardsTypeIndex == 1) { //铁支
                 if (blackArraySort[0] < whiteArraySort[0]) {
                     String sig = intNumber(whiteArraySort[0]);
                     winResult = "white wins - high card:" + sig;
@@ -41,7 +41,7 @@ public class Poker {
                     String sig = intNumber(blackArraySort[0]);
                     winResult = "black wins - high card:" + sig;
                 }
-            } else if (blackIndex == 2) { //葫芦
+            } else if (blackPlayerCardsTypeIndex == 2) { //葫芦
                 if (blackArraySort[0] < whiteArraySort[0]) {
                     String sig = intNumber(whiteArraySort[0]);
                     winResult = "white wins - high card:" + sig;
@@ -49,7 +49,7 @@ public class Poker {
                     String sig = intNumber(blackArraySort[0]);
                     winResult = "black wins - high card:" + sig;
                 }
-            } else if (blackIndex == 3) { //同花
+            } else if (blackPlayerCardsTypeIndex == 3) { //同花
                 for (int i = 0; i < 5; i++) {
                     if (blackCardsNum[i] < whiteCardsNum[i]) {
                         String sig = intNumber(whiteCardsNum[i]);
@@ -63,7 +63,7 @@ public class Poker {
                         winResult = "tie";
                     }
                 }
-            } else if (blackIndex == 4) { //顺子
+            } else if (blackPlayerCardsTypeIndex == 4) { //顺子
                 if (blackCardsNum[0] < whiteCardsNum[0]) {
                     String sig = intNumber(whiteCardsNum[0]);
                     winResult = "white wins - high card:" + sig;
@@ -73,7 +73,7 @@ public class Poker {
                 } else {
                     winResult = "tie";
                 }
-            } else if (blackIndex == 5) { //三条
+            } else if (blackPlayerCardsTypeIndex == 5) { //三条
                 if (blackRepeat[0] < whiteRepeat[0]) {
                     String sig = intNumber(whiteRepeat[0]);
                     winResult = "white wins - high card:" + sig;
@@ -81,7 +81,7 @@ public class Poker {
                     String sig = intNumber(blackRepeat[0]);
                     winResult = "black wins - high card:" + sig;
                 }
-            } else if (blackIndex == 6) { //两对
+            } else if (blackPlayerCardsTypeIndex == 6) { //两对
                 for (int i = 0; i < 2; i++) {
                     if (blackRepeat[i] < whiteRepeat[i]) {
                         String sig = intNumber(whiteRepeat[i]);
@@ -104,7 +104,7 @@ public class Poker {
                         winResult = "tie";
                     }
                 }
-            } else if (blackIndex == 7) { //对子
+            } else if (blackPlayerCardsTypeIndex == 7) { //对子
                 if (blackRepeat[0] < whiteRepeat[0]) {
                     String sig = intNumber(whiteRepeat[0]);
                     winResult = "white wins - high card:" + sig;
@@ -235,7 +235,7 @@ public class Poker {
         return reResult;
     }
 
-    private int judgeIndex(String strType) {
+    private int getPlayerCardsTypeIndex(String strType) {
         int index = -1;
         String[] type = {"StraightFlush", "FourOfAKind", "FullHouse", "Flush", "Straight", "ThreeOfAKind", "TwoPair", "OnePair", "HighCard"};
         for (int i = 0; i < 9; i++) {
