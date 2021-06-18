@@ -160,8 +160,7 @@ public class Poker {
     }
 
     private int[] descendingSort(int[] handsNumbers) {
-//        Map<Integer, Integer> map = getDistinctNumbersAndCount(handsNumbers);
-        Map<Integer, Integer> map = getDistinctNumbersAndCount2(handsNumbers);
+        Map<Integer, Integer> map = getDistinctNumbersAndCount(handsNumbers);
 
         List<Map.Entry<Integer, Integer>> list = new ArrayList<>();
         list.addAll(map.entrySet());
@@ -180,19 +179,6 @@ public class Poker {
     }
 
     private Map<Integer, Integer> getDistinctNumbersAndCount(int[] handsNumbers) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < handsNumbers.length; i++) {
-            if (map.get(handsNumbers[i]) != null) {
-                map.put(handsNumbers[i], map.get(handsNumbers[i]) + 1);
-            } else {
-                map.put(handsNumbers[i], 1);
-            }
-        }
-        return map;
-    }
-
-
-    private Map<Integer, Integer> getDistinctNumbersAndCount2(int[] handsNumbers) {
         Map<Integer, Integer> distinctNumbersAndCount = Arrays.stream(handsNumbers)
                 .boxed() //封装
                 .collect(Collectors.groupingBy(number -> number, Collectors.reducing(0,number -> 1, Integer::sum)));
